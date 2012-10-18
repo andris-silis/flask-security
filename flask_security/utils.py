@@ -234,6 +234,9 @@ def send_mail(subject, recipient, template, **context):
     mail = current_app.extensions.get('mail')
     mail.send(msg)
 
+    if current_app.debug:
+        current_app.logger.debug('Flask-Security mail:' + msg.body)
+
 
 def get_token_status(token, serializer, max_age=None):
     serializer = getattr(_security, serializer + '_serializer')
