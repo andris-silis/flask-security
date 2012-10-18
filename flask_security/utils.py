@@ -227,6 +227,9 @@ def send_mail(subject, recipient, template, **context):
     msg.body = render_template('%s/%s.txt' % ctx, **context)
     msg.html = render_template('%s/%s.html' % ctx, **context)
 
+    if current_app.debug:
+        current_app.logger.debug('Flask-Security mail:' + msg.body)
+
     if _security._send_mail_task:
         _security._send_mail_task(msg)
         return
@@ -234,8 +237,6 @@ def send_mail(subject, recipient, template, **context):
     mail = current_app.extensions.get('mail')
     mail.send(msg)
 
-    if current_app.debug:
-        current_app.logger.debug('Flask-Security mail:' + msg.body)
 
 
 def get_token_status(token, serializer, max_age=None):
